@@ -1,27 +1,44 @@
-'''
-ÏÖÔÚÊÇ:2023/5/21 21:45
-ÒÀÈ»²»ÒªÍü¼Ç
-¸ß¤ß¤òÄ¿Ö¸¤¹¤«¤é¤³¤½³ö»á¤¦±Ú
-'''
-from flask import Flask, request, jsonify
+# -*- coding: utf-8 -*-
+from flask import Flask, render_template, request, jsonify
 
 app = Flask(__name__)
 
+# æ¨¡æ‹Ÿä¿å­˜æ•°æ®çš„å˜é‡
+data = None
+
 @app.route('/')
 def index():
-    return 'Hello Flask!'
+    return "hello flask!"
 
 @app.route('/api/data', methods=['GET', 'POST'])
 def api_data():
+    global data
+
     if request.method == 'GET':
-        # ´¦Àí GET ÇëÇó
-        data = {'message': 'ÕâÊÇÒ»¸ö GET ÇëÇó'}
-        return jsonify(data)
+        # å¤„ç† GET è¯·æ±‚ï¼Œè¿”å›ä¿å­˜çš„æ•°æ®
+        response = {'data': data}
+        return jsonify(response)
     elif request.method == 'POST':
-        # ´¦Àí POST ÇëÇó
+        # å¤„ç† POST è¯·æ±‚ï¼Œæ¥æ”¶æ•°æ®å¹¶ä¿å­˜
         content = request.get_json()
-        data = {'message': 'ÕâÊÇÒ»¸ö POST ÇëÇó', 'received_data': content}
-        return jsonify(data)
+        data = content['data']
+
+        # è¿”å›æˆåŠŸçš„å“åº”
+        response = {'status': 'success'}
+        return jsonify(response)
+
+@app.route('/api/control', methods=['POST'])
+def api_control():
+    # å¤„ç†æ§åˆ¶å‘½ä»¤
+    content = request.get_json()
+    command = content['command']
+
+    # æ‰§è¡Œç›¸åº”çš„æ§åˆ¶æ“ä½œ
+    # ...
+
+    # è¿”å›æˆåŠŸçš„å“åº”
+    response = {'status': 'success'}
+    return jsonify(response)
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
